@@ -13,14 +13,24 @@ type Batch struct {
 	FinishDate time.Time
 }
 
+type BatchStep struct {
+	ID int
+	UserId int
+	RecipeStepId int
+	BatchId int
+	StartedAt time.Time
+	FinishedAt time.Time
+}
+
 func NewBatchApplication() *Batch {
 	return &Batch{}
 }
 
-func (t *Batch) isValid() error {
-	if t.ID <= 0 {
-		return fmt.Errorf("Wrong ID format")
-	}
+func NewBatchStepApplication() *BatchStep {
+	return &BatchStep{}
+}
+
+func (t *Batch) IsValid() error {
 
 	if t.Name == "" {
 		return fmt.Errorf("Batch name is required")
@@ -32,10 +42,6 @@ func (t *Batch) isValid() error {
 
 	if t.StartDate.IsZero() {
 		return fmt.Errorf("Batch must have a start date")
-	}
-
-	if !t.FinishDate.IsZero() {
-		return fmt.Errorf("Batch must not have a fisnish time when created")
 	}
 
 	return nil

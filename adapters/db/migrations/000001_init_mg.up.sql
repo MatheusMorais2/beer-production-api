@@ -1,35 +1,35 @@
 CREATE TABLE "brewery" (
-  "id" integer PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY ,
   "name" varchar,
   "cnpj" varchar
 );
 
 CREATE TABLE "users" (
-  "id" integer PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "name" varchar,
   "role" varchar,
   "brewery_id" integer
 );
 
 CREATE TABLE "recipe" (
-  "id" integer PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "name" varchar,
   "brewery_id" integer
 );
 
-CREATE TABLE "equipament" (
-  "id" integer PRIMARY KEY,
-  "name" varchar
-);
+--CREATE TABLE "equipament" (
+--  "id" SERIAL PRIMARY KEY,
+--  "name" varchar
+--);
 
-CREATE TABLE "recipe_equipament" (
-  "id" integer PRIMARY KEY,
-  "recipe_id" integer,
-  "equipament_id" integer
-);
+--CREATE TABLE "recipe_equipament" (
+--  "id" SERIAL PRIMARY KEY,
+ -- "recipe_id" integer,
+ -- "equipament_id" integer
+--);
 
 CREATE TABLE "batch" (
-  "id" integer PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "name" varchar,
   "recipe_id" integer,
   "start_date" date,
@@ -37,14 +37,15 @@ CREATE TABLE "batch" (
 );
 
 CREATE TABLE "recipe_step" (
-  "id" integer PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "name" varchar,
   "recipe_id" integer,
-  "equipament_id" integer
+  "instruction" TEXT
+  --"equipament_id" integer
 );
 
 CREATE TABLE "batch_recipe_step" (
-  "id" integer PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "user_id" integer,
   "recipe_step_id" integer,
   "batch_id" integer,
@@ -52,15 +53,15 @@ CREATE TABLE "batch_recipe_step" (
   "finished_at" timestamp
 );
 
-ALTER TABLE "recipe_equipament" ADD FOREIGN KEY ("recipe_id") REFERENCES "recipe" ("id");
+--ALTER TABLE "recipe_equipament" ADD FOREIGN KEY ("recipe_id") REFERENCES "recipe" ("id");
 
-ALTER TABLE "recipe_equipament" ADD FOREIGN KEY ("equipament_id") REFERENCES "equipament" ("id");
+--ALTER TABLE "recipe_equipament" ADD FOREIGN KEY ("equipament_id") REFERENCES "equipament" ("id");
 
 ALTER TABLE "batch" ADD FOREIGN KEY ("recipe_id") REFERENCES "recipe" ("id");
 
 ALTER TABLE "recipe_step" ADD FOREIGN KEY ("recipe_id") REFERENCES "recipe" ("id");
 
-ALTER TABLE "recipe_step" ADD FOREIGN KEY ("equipament_id") REFERENCES "equipament" ("id");
+--ALTER TABLE "recipe_step" ADD FOREIGN KEY ("equipament_id") REFERENCES "equipament" ("id");
 
 ALTER TABLE "batch_recipe_step" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 

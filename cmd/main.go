@@ -32,11 +32,13 @@ func main() {
 	if err != nil {
 		fmt.Println("Error connecting to database: ", err)
 		os.Exit(1)
+	} else {
+		fmt.Println("Successfully connected to database")
 	}
 	defer db.Close()
 
 	app := bootstrap.NewApp(db)
 
 	httpServer := server.NewServer(app)
-	go httpServer.Start()
+	httpServer.Start()
 }

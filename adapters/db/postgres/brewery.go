@@ -15,8 +15,9 @@ func NewBreweryRepository(db *sql.DB) *BreweryRepository {
 }
 
 func (t *BreweryRepository) Insert(breweryToInsert *brewery.Brewery) (*brewery.Brewery, error) {
+	fmt.Println("chegou no insert brewery")
 	err := t.db.QueryRow(
-		`INSERT INTO "tblBrewery" (name, cnpj)
+		`INSERT INTO "brewery" (name, cnpj)
 		VALUES ($1, $2) RETURNING id`,
 		breweryToInsert.Name, breweryToInsert.Cnpj,
 	).Scan(&breweryToInsert.ID)

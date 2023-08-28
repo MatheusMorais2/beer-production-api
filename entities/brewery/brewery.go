@@ -12,10 +12,7 @@ func NewBreweryApplication() *Brewery {
 	return &Brewery{}
 }
 
-func (t *Brewery) isValid() error {
-	if t.ID <= 0 {
-		return fmt.Errorf("Wrong ID format")
-	}
+func (t *Brewery) IsValid() error {
 
 	if t.Name == "" {
 		return fmt.Errorf("Brewery name is required")

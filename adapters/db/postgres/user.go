@@ -14,17 +14,18 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-func (t *UserRepository) Insert(UserToInsert *user.User) (*user.User, error) {
+func (t *UserRepository) Insert(userToInsert *user.User) (*user.User, error) {
+	fmt.Printf("userToInsert: %+v", userToInsert)
 	err := t.db.QueryRow(
-		`INSERT INTO "tblUser" (name, role, brewery_id)
+		`INSERT INTO "users" (name, role, brewery_id)
 		VALUES ($1, $2, $3) RETURNING id`,
-		UserToInsert.Name, UserToInsert.Role, UserToInsert.BreweryId,
-	).Scan(&UserToInsert.ID)
+		userToInsert.Name, userToInsert.Role, userToInsert.BreweryId,
+	).Scan(&userToInsert.ID)
 
 	if err != nil {
 		fmt.Println("Error on insert User")
 		return nil, err
 	}
 
-	return UserToInsert, nil
+	return userToInsert, nil
 }

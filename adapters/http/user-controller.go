@@ -3,6 +3,9 @@ package http
 import (
 	"beer-production-api/bootstrap"
 	"beer-production-api/entities/user"
+	userService "beer-production-api/service/user"
+	"fmt"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
@@ -16,12 +19,19 @@ func NewUserController(app *bootstrap.App) *UserController {
 }
 
 func (uc *UserController) CreateUser(c echo.Context) (error) {
-	userDto := user.CreateUserInputDto{}
+	fmt.Println("chegou no user controller")
+	userDto := &user.CreateUserInputDto{}
 	err := c.Bind(userDto)
 	if err != nil {
+		fmt.Println("entrou no erro do controller")
 		return c.JSON(400, err.Error())
 	}
 
-	//serviceInjection := service.New
-	return nil
+	serviceInjection := userService.NewCreateUser(uc.app.UserRepo)
+	output, err := serviceInjection.Execute(*userDto)
+	if err != nil {
+		return c.JSON(
+			http.StatusBadRequest, err)
+	}
+	return c.JSON(http.StatusCreated, output)
 }
