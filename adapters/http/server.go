@@ -1,6 +1,7 @@
 package http
 
 import (
+	"beer-production-api/adapters/auth"
 	"beer-production-api/bootstrap"
 	"fmt"
 	"log"
@@ -32,6 +33,7 @@ func NewServer(app *bootstrap.App) *Server {
 // @schemes http
 func (s *Server) Start() {
 	fmt.Println("chegou no start")
+	s.echo.Use(auth.AuthMiddleware)
 	userController := NewUserController(s.app)
 	breweryController := NewBreweryController(s.app)
 	recipeController := NewRecipeController(s.app)

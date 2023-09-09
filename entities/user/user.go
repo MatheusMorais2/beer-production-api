@@ -7,8 +7,8 @@ import (
 type User struct {
 	ID int
 	Name string
-	Role Role
-	BreweryId int
+	Password string
+	Email string
 }
 
 type Role string
@@ -31,17 +31,17 @@ func (t *User) IsValid() error {
 		return fmt.Errorf("User name is required")
 	}
 
-	if t.Role == Unknown {
-	fmt.Println("entrou no isvalid 3")
+	if t.Password == "" {
+		fmt.Println("entrou no isvalid user password")
 
-		return fmt.Errorf("User must have a role")
+		return fmt.Errorf("User must have a password") 
 	}
 
-	if t.BreweryId <= 0 {
-	fmt.Println("entrou no isvalid 4")
+	if t.Email == "" {
+		fmt.Println("entrou no isvalid user email")
 
-		return fmt.Errorf("User must be linked to a brewery")
+		return fmt.Errorf("User must have a email") 
 	}
-	
+ 	
 	return nil
 }

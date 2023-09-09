@@ -1,6 +1,7 @@
 package userService
 
 import (
+	"beer-production-api/adapters/auth"
 	"beer-production-api/entities/user"
 	"fmt"
 )
@@ -14,12 +15,20 @@ func NewCreateUser(userRepository user.UserRepository) *CreateUser {
 }
 
 func (cU *CreateUser) Execute(input user.CreateUserInputDto) (*user.CreateUserOutputDto, error) {
+	var err error
 	userToCreate := user.NewUserApplication()
 	userToCreate.Name = input.Name
-	userToCreate.Role = input.Role
-	userToCreate.BreweryId = input.BreweryId
+
+	userToCreate.Email = input.Email
+	userToCreate.Password, err = auth.HashPassword(input.Password)
+	if err != nil {
+		return &user.CreateUserOutputDto{
+			ErrorMessage: "Error hashing password",
+		}, err
+	}
+
 	fmt.Printf("userToCreate: %+v", userToCreate)
-	err := userToCreate.IsValid()
+	err = userToCreate.IsValid()
 	if err != nil {
 		fmt.Println("entrou no erro do isvalid")
 		return &user.CreateUserOutputDto{
@@ -37,8 +46,7 @@ func (cU *CreateUser) Execute(input user.CreateUserInputDto) (*user.CreateUserOu
 	output := &user.CreateUserOutputDto{
 		Id: createdUser.ID,
 		Name: createdUser.Name,
-		Role: createdUser.Role,
-		BreweryId: createdUser.BreweryId,
+		Email: createdUser.Email,
 	}
 
 	return output, nil

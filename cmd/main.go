@@ -13,7 +13,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-
 func connectToDB() (*sql.DB, error) {
 	godotenv.Load()
 	dbConfig := postgres.Config{
