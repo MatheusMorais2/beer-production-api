@@ -17,7 +17,7 @@ func (cB *CreateBrewery) Execute(input brewery.CreateBreweryInputDto) (*brewery.
 	breweryToCreate := brewery.NewBreweryApplication()
 	breweryToCreate.Name = input.Name
 	breweryToCreate.Cnpj = input.Cnpj
-	fmt.Printf("breweryToCreate: %+v", breweryToCreate)
+	fmt.Printf("breweryToCreate: %+v\n", breweryToCreate)
 	err := breweryToCreate.IsValid()
 	if err != nil {
 		fmt.Println("entrou no erro do isvalid")

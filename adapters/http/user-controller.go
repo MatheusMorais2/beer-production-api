@@ -35,3 +35,21 @@ func (uc *UserController) CreateUser(c echo.Context) (error) {
 	}
 	return c.JSON(http.StatusCreated, output)
 }
+
+func (uc *UserController) Login(c echo.Context) (error) {
+	fmt.Println("chegou no login controller")
+	loginInputDto := &user.LoginUserInputDto{}
+	err := c.Bind(loginInputDto)
+	if err != nil {
+		fmt.Println("entrou no erro do login controller")
+		return c.JSON(400, err.Error())
+	}
+
+	serviceInjection := userService.NewLoginUser(uc.app.UserRepo)
+	output, err := serviceInjection.Execute(*loginInputDto)
+	if err != nil {
+		return c.JSON(
+			http.StatusUnauthorized, err)
+	}
+	return c.JSON(http.StatusAccepted, output)
+}

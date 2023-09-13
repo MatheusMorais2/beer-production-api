@@ -25,7 +25,7 @@ func (bc *BatchController) CreateBatch(c echo.Context) (error) {
 	if err != nil {
 		return c.JSON(400, err.Error())
 	}
-	fmt.Printf("BatchDto: %+v", batchDto)
+	fmt.Printf("BatchDto: %+v\n", batchDto)
 
 	serviceInjection := batchService.NewCreateBatch(bc.app.BatchRepo)
 	output, err := serviceInjection.Execute(*batchDto)
@@ -44,7 +44,7 @@ func (bc *BatchController) CreateBatchStep(c echo.Context) (error) {
 	if err != nil {
 		return c.JSON(400, err.Error())
 	}
-	fmt.Printf("BatchStepDto: %+v", batchStepDto)
+	fmt.Printf("BatchStepDto: %+v\n", batchStepDto)
 
 	serviceInjection := batchService.NewCreateBatchStep(bc.app.BatchRepo)
 	output, err := serviceInjection.Execute(*batchStepDto)

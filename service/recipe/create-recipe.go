@@ -18,7 +18,7 @@ func (cB *CreateRecipe) Execute(input recipe.CreateRecipeInputDto) (*recipe.Crea
 	RecipeToCreate.Name = input.Name
 	RecipeToCreate.BreweryId = input.BreweryId
 	RecipeToCreate.Steps = input.Steps
-	fmt.Printf("RecipeToCreate: %+v", RecipeToCreate)
+	fmt.Printf("RecipeToCreate: %+v\n", RecipeToCreate)
 	err := RecipeToCreate.IsValid()
 	if err != nil {
 		fmt.Println("entrou no erro do isvalid")

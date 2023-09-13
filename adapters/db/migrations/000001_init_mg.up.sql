@@ -1,5 +1,5 @@
 CREATE TABLE "brewery" (
-  "id" SERIAL PRIMARY KEY ,
+  "id" SERIAL PRIMARY KEY,
   "name" varchar,
   "cnpj" varchar
 );
@@ -8,7 +8,7 @@ CREATE TABLE "users" (
   "id" SERIAL PRIMARY KEY,
   "name" varchar,
   "email" varchar unique,
-  "password" varchar,
+  "password" varchar
 );
 
 CREATE TABLE "brewery_user" (
@@ -16,7 +16,7 @@ CREATE TABLE "brewery_user" (
   "user_id" integer,
   "brewery_id" integer,
   "role" varchar
-)
+);
 
 CREATE TABLE "recipe" (
   "id" SERIAL PRIMARY KEY,
@@ -75,8 +75,6 @@ ALTER TABLE "batch_recipe_step" ADD FOREIGN KEY ("user_id") REFERENCES "users" (
 ALTER TABLE "batch_recipe_step" ADD FOREIGN KEY ("recipe_step_id") REFERENCES "recipe_step" ("id");
 
 ALTER TABLE "batch_recipe_step" ADD FOREIGN KEY ("batch_id") REFERENCES "batch" ("id");
-
-ALTER TABLE "users" ADD FOREIGN KEY ("brewery_id") REFERENCES "brewery" ("id");
 
 ALTER TABLE "recipe" ADD FOREIGN KEY ("brewery_id") REFERENCES "brewery" ("id");
 

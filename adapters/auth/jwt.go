@@ -67,7 +67,7 @@ func GetAuthTokenData(token string, key []byte) (*jwt.Token, error) {
 		err = fmt.Errorf("Error parsing token data: %+v", err)
 		return nil, err
 	}
-	fmt.Printf("tokenData: %+v", tokenData)
+	fmt.Printf("tokenData: %+v\n", tokenData)
 	return tokenData, nil
 }
 

@@ -25,7 +25,7 @@ func (rc *RecipeController) CreateRecipe(c echo.Context) (error) {
 	if err != nil {
 		return c.JSON(400, err.Error())
 	}
-	fmt.Printf("RecipeDto: %+v", RecipeDto)
+	fmt.Printf("RecipeDto: %+v\n", RecipeDto)
 
 	serviceInjection := recipeService.NewCreateRecipe(rc.app.RecipeRepo)
 	output, err := serviceInjection.Execute(*RecipeDto)

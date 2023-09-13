@@ -25,7 +25,7 @@ func (bc *BreweryController) CreateBrewery(c echo.Context) (error) {
 	if err != nil {
 		return c.JSON(400, err.Error())
 	}
-	fmt.Printf("breweryDto: %+v", breweryDto)
+	fmt.Printf("breweryDto: %+v\n", breweryDto)
 
 	serviceInjection := breweryService.NewCreateBrewery(bc.app.BreweryRepo)
 	output, err := serviceInjection.Execute(*breweryDto)

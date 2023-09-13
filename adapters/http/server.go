@@ -33,21 +33,21 @@ func NewServer(app *bootstrap.App) *Server {
 // @schemes http
 func (s *Server) Start() {
 	fmt.Println("chegou no start")
-	s.echo.Use(auth.AuthMiddleware)
 	userController := NewUserController(s.app)
 	breweryController := NewBreweryController(s.app)
 	recipeController := NewRecipeController(s.app)
 	batchController := NewBatchController(s.app)
 
-	s.echo.POST("/brewery", breweryController.CreateBrewery)
-
 	s.echo.POST("/users", userController.CreateUser)
+	s.echo.POST("/auth/login", userController.Login)
 
-	s.echo.POST("/recipes", recipeController.CreateRecipe)
+	s.echo.POST("/brewery", breweryController.CreateBrewery, auth.AuthMiddleware)
 
-	s.echo.POST("/batches", batchController.CreateBatch)
+	s.echo.POST("/recipes", recipeController.CreateRecipe, auth.AuthMiddleware)
 
-	s.echo.POST("/start-batch", batchController.CreateBatchStep)
+	s.echo.POST("/batches", batchController.CreateBatch, auth.AuthMiddleware)
+
+	s.echo.POST("/start-batch", batchController.CreateBatchStep, auth.AuthMiddleware)
 
 	err := s.echo.Start(":8080")
 	if err != nil {

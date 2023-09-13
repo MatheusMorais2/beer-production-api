@@ -19,7 +19,7 @@ func (cbS *CreateBatchStep) Execute(input batch.CreateBatchStepInputDto) (*batch
 	BatchStepToCreate.RecipeStepId = input.RecipeStepId
 	BatchStepToCreate.StartedAt = input.StartedAt
 	BatchStepToCreate.BatchId = input.BatchId
-	fmt.Printf("BatchStepToCreate: %+v", BatchStepToCreate)
+	fmt.Printf("BatchStepToCreate: %+v\n", BatchStepToCreate)
 /* 	err := BatchStepToCreate.IsValid()
 	if err != nil {
 		fmt.Println("entrou no erro do isvalid")

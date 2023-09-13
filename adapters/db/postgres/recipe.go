@@ -47,11 +47,10 @@ func (t *RecipeRepository) Insert(recipeToInsert *recipe.Recipe) (*recipe.Recipe
 	fmt.Printf("recipe steps: %+v\n", recipeStepsQuery)
 	rows, err := t.db.Query(recipeStepsQuery)
 	if err != nil {
-		fmt.Printf("error insert recipe steps: %+v", err.Error())
-		fmt.Println("Error inserting recipe steps")
+		fmt.Printf("error insert recipe steps: %+v\n", err.Error())
 		return nil, err
 	}
-	fmt.Printf("rows: %+v", rows)
+	fmt.Printf("rows: %+v\n", rows)
 
 	return recipeToInsert, nil
 }

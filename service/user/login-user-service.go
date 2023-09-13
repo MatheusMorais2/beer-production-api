@@ -18,7 +18,7 @@ func (lU *LoginUser) Execute(input user.LoginUserInputDto) (*user.LoginUserOutpu
 	userToLogin := user.NewUserApplication()
 	userToLogin.Password = input.Password
 	userToLogin.Email = input.Email
-	fmt.Printf("userToLogin: %+v", userToLogin)
+	fmt.Printf("userToLogin: %+v\n", userToLogin)
 
 	databaseUser, err := lU.UserRepository.GetByEmail(userToLogin.Email)
 	if err != nil {

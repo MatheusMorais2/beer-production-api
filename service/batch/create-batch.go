@@ -18,7 +18,7 @@ func (cB *CreateBatch) Execute(input batch.CreateBatchInputDto) (*batch.CreateBa
 	BatchToCreate.Name = input.Name
 	BatchToCreate.RecipeId = input.RecipeId
 	BatchToCreate.StartDate = input.StartDate
-	fmt.Printf("BatchToCreate: %+v", BatchToCreate)
+	fmt.Printf("BatchToCreate: %+v\n", BatchToCreate)
 	err := BatchToCreate.IsValid()
 	if err != nil {
 		fmt.Println("entrou no erro do isvalid")
