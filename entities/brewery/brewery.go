@@ -3,9 +3,10 @@ package brewery
 import "fmt"
 
 type Brewery struct {
-	ID int
+	ID string
 	Name string
 	Cnpj string
+	CreatorId string
 }
 
 func NewBreweryApplication() *Brewery {
@@ -20,6 +21,10 @@ func (t *Brewery) IsValid() error {
 
 	if t.Cnpj == "" {
 		return fmt.Errorf("Brewery cnpj is required")
+	}
+
+	if t.CreatorId == "" {
+		return fmt.Errorf("Creator id is required")
 	}
 
 	return nil

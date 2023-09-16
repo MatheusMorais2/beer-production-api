@@ -4,7 +4,6 @@ import (
 	"beer-production-api/bootstrap"
 	"beer-production-api/entities/recipe"
 	recipeService "beer-production-api/service/recipe"
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -19,13 +18,11 @@ func NewRecipeController(app *bootstrap.App) *RecipeController {
 }
 
 func (rc *RecipeController) CreateRecipe(c echo.Context) (error) {
-	fmt.Println("chegou no Recipe controller")
 	RecipeDto := &recipe.CreateRecipeInputDto{}
 	err := c.Bind(RecipeDto)
 	if err != nil {
 		return c.JSON(400, err.Error())
 	}
-	fmt.Printf("RecipeDto: %+v\n", RecipeDto)
 
 	serviceInjection := recipeService.NewCreateRecipe(rc.app.RecipeRepo)
 	output, err := serviceInjection.Execute(*RecipeDto)

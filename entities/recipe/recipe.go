@@ -5,9 +5,9 @@ import (
 )
 
 type Recipe struct {
-	ID int
+	ID string
 	Name string
-	BreweryId int
+	BreweryId string
 	Steps []Steps
 }
 
@@ -25,7 +25,7 @@ func (t *Recipe) IsValid() error {
 		return fmt.Errorf("Recipe name is required")
 	}
 
-	if t.BreweryId <= 0 {
+	if t.BreweryId == "" {
 		return fmt.Errorf("Recipe must be linked to a brewery")
 	}
 

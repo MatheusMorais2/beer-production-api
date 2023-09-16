@@ -3,7 +3,6 @@ package userService
 import (
 	"beer-production-api/adapters/auth"
 	"beer-production-api/entities/user"
-	"fmt"
 )
 
 type CreateUser struct {
@@ -27,10 +26,8 @@ func (cU *CreateUser) Execute(input user.CreateUserInputDto) (*user.CreateUserOu
 		}, err
 	}
 
-	fmt.Printf("userToCreate: %+v\n", userToCreate)
 	err = userToCreate.IsValid()
 	if err != nil {
-		fmt.Println("entrou no erro do isvalid")
 		return &user.CreateUserOutputDto{
 			ErrorMessage: "Usuário inválido ou com informações faltando",
 		}, err

@@ -4,7 +4,6 @@ import (
 	"beer-production-api/bootstrap"
 	"beer-production-api/entities/batch"
 	batchService "beer-production-api/service/batch"
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -19,13 +18,12 @@ func NewBatchController(app *bootstrap.App) *BatchController {
 }
 
 func (bc *BatchController) CreateBatch(c echo.Context) (error) {
-	fmt.Println("chegou no Batch controller")
+
 	batchDto := &batch.CreateBatchInputDto{}
 	err := c.Bind(batchDto)
 	if err != nil {
 		return c.JSON(400, err.Error())
 	}
-	fmt.Printf("BatchDto: %+v\n", batchDto)
 
 	serviceInjection := batchService.NewCreateBatch(bc.app.BatchRepo)
 	output, err := serviceInjection.Execute(*batchDto)
@@ -38,13 +36,11 @@ func (bc *BatchController) CreateBatch(c echo.Context) (error) {
 }
 
 func (bc *BatchController) CreateBatchStep(c echo.Context) (error) {
-	fmt.Println("chegou no Batch controller")
 	batchStepDto := &batch.CreateBatchStepInputDto{}
 	err := c.Bind(batchStepDto)
 	if err != nil {
 		return c.JSON(400, err.Error())
 	}
-	fmt.Printf("BatchStepDto: %+v\n", batchStepDto)
 
 	serviceInjection := batchService.NewCreateBatchStep(bc.app.BatchRepo)
 	output, err := serviceInjection.Execute(*batchStepDto)

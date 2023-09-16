@@ -3,7 +3,6 @@ package postgres
 import (
 	"beer-production-api/entities/batch"
 	"database/sql"
-	"fmt"
 )
 
 type BatchRepository struct {
@@ -23,7 +22,6 @@ func (t *BatchRepository) Insert(batchToInsert *batch.Batch) (*batch.Batch, erro
 	).Scan(&batchToInsert.ID)
 
 	if err != nil {
-		fmt.Println("Error on insert Batch")
 		return nil, err
 	}
 
@@ -31,7 +29,6 @@ func (t *BatchRepository) Insert(batchToInsert *batch.Batch) (*batch.Batch, erro
 }
 
 func (t *BatchRepository) InsertBatchStep(batchStepToInsert *batch.BatchStep) (*batch.BatchStep, error) {
-	fmt.Printf("batchStepToInsert.BatchId: %+v\n", batchStepToInsert.BatchId)
 	formatedStartDate := batchStepToInsert.StartedAt.Format("2006-01-02 15:04:05")
 	err := t.db.QueryRow(
 		`INSERT INTO "batch_recipe_step" (user_id, recipe_step_id, batch_id, started_at, finished_at)
@@ -40,7 +37,6 @@ func (t *BatchRepository) InsertBatchStep(batchStepToInsert *batch.BatchStep) (*
 	).Scan(&batchStepToInsert.ID)
 
 	if err != nil {
-		fmt.Println("Error on insert batch step")
 		return nil, err
 	}
 

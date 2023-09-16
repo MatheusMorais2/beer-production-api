@@ -4,7 +4,6 @@ import (
 	"beer-production-api/bootstrap"
 	"beer-production-api/entities/brewery"
 	breweryService "beer-production-api/service/brewery"
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -19,13 +18,11 @@ func NewBreweryController(app *bootstrap.App) *BreweryController {
 }
 
 func (bc *BreweryController) CreateBrewery(c echo.Context) (error) {
-	fmt.Println("chegou no brewery controller")
 	breweryDto := &brewery.CreateBreweryInputDto{}
 	err := c.Bind(breweryDto)
 	if err != nil {
 		return c.JSON(400, err.Error())
 	}
-	fmt.Printf("breweryDto: %+v\n", breweryDto)
 
 	serviceInjection := breweryService.NewCreateBrewery(bc.app.BreweryRepo)
 	output, err := serviceInjection.Execute(*breweryDto)

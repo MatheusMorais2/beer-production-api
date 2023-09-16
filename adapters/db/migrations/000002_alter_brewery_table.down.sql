@@ -1,0 +1,1 @@
+ALTER TABLE brewery DROP COLUMN creator_id;

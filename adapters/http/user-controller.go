@@ -19,17 +19,16 @@ func NewUserController(app *bootstrap.App) *UserController {
 }
 
 func (uc *UserController) CreateUser(c echo.Context) (error) {
-	fmt.Println("chegou no user controller")
 	userDto := &user.CreateUserInputDto{}
 	err := c.Bind(userDto)
 	if err != nil {
-		fmt.Println("entrou no erro do controller")
 		return c.JSON(400, err.Error())
 	}
 
 	serviceInjection := userService.NewCreateUser(uc.app.UserRepo)
 	output, err := serviceInjection.Execute(*userDto)
 	if err != nil {
+		fmt.Println(err)
 		return c.JSON(
 			http.StatusBadRequest, err)
 	}
@@ -37,11 +36,9 @@ func (uc *UserController) CreateUser(c echo.Context) (error) {
 }
 
 func (uc *UserController) Login(c echo.Context) (error) {
-	fmt.Println("chegou no login controller")
 	loginInputDto := &user.LoginUserInputDto{}
 	err := c.Bind(loginInputDto)
 	if err != nil {
-		fmt.Println("entrou no erro do login controller")
 		return c.JSON(400, err.Error())
 	}
 

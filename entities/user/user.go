@@ -5,7 +5,7 @@ import (
 )
 
 type User struct {
-	ID int
+	ID string
 	Name string
 	Password string
 	Email string
@@ -26,20 +26,14 @@ func NewUserApplication() *User {
 
 func (t *User) IsValid() error {
 	if t.Name == "" {
-	fmt.Println("entrou no isvalid 2")
-
 		return fmt.Errorf("User name is required")
 	}
 
 	if t.Password == "" {
-		fmt.Println("entrou no isvalid user password")
-
 		return fmt.Errorf("User must have a password") 
 	}
 
 	if t.Email == "" {
-		fmt.Println("entrou no isvalid user email")
-
 		return fmt.Errorf("User must have a email") 
 	}
  	

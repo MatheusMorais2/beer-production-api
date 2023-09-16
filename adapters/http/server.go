@@ -3,7 +3,6 @@ package http
 import (
 	"beer-production-api/adapters/auth"
 	"beer-production-api/bootstrap"
-	"fmt"
 	"log"
 
 	"github.com/labstack/echo/v4"
@@ -32,7 +31,6 @@ func NewServer(app *bootstrap.App) *Server {
 // @BasePath /
 // @schemes http
 func (s *Server) Start() {
-	fmt.Println("chegou no start")
 	userController := NewUserController(s.app)
 	breweryController := NewBreweryController(s.app)
 	recipeController := NewRecipeController(s.app)

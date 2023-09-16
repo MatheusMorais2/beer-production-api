@@ -3,7 +3,6 @@ package postgres
 import (
 	"beer-production-api/entities/brewery"
 	"database/sql"
-	"fmt"
 )
 
 type BreweryRepository struct {
@@ -15,7 +14,6 @@ func NewBreweryRepository(db *sql.DB) *BreweryRepository {
 }
 
 func (t *BreweryRepository) Insert(breweryToInsert *brewery.Brewery) (*brewery.Brewery, error) {
-	fmt.Println("chegou no insert brewery")
 	err := t.db.QueryRow(
 		`INSERT INTO "brewery" (name, cnpj)
 		VALUES ($1, $2) RETURNING id`,
@@ -23,7 +21,6 @@ func (t *BreweryRepository) Insert(breweryToInsert *brewery.Brewery) (*brewery.B
 	).Scan(&breweryToInsert.ID)
 
 	if err != nil {
-		fmt.Println("Error on insert brewery")
 		return nil, err
 	}
 

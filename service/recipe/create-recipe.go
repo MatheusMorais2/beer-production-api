@@ -2,7 +2,6 @@ package RecipeService
 
 import (
 	"beer-production-api/entities/recipe"
-	"fmt"
 )
 
 type CreateRecipe struct {
@@ -18,10 +17,8 @@ func (cB *CreateRecipe) Execute(input recipe.CreateRecipeInputDto) (*recipe.Crea
 	RecipeToCreate.Name = input.Name
 	RecipeToCreate.BreweryId = input.BreweryId
 	RecipeToCreate.Steps = input.Steps
-	fmt.Printf("RecipeToCreate: %+v\n", RecipeToCreate)
 	err := RecipeToCreate.IsValid()
 	if err != nil {
-		fmt.Println("entrou no erro do isvalid")
 		return &recipe.CreateRecipeOutputDto{
 			ErrorMessage: "Receita inválida ou com informações faltando",
 		}, err

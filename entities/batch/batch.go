@@ -6,18 +6,18 @@ import (
 )
 
 type Batch struct {
-	ID int
+	ID string
 	Name string
-	RecipeId int
+	RecipeId string
 	StartDate time.Time
 	FinishDate time.Time
 }
 
 type BatchStep struct {
-	ID int
-	UserId int
-	RecipeStepId int
-	BatchId int
+	ID string
+	UserId string
+	RecipeStepId string
+	BatchId string
 	StartedAt time.Time
 	FinishedAt time.Time
 }
@@ -36,7 +36,7 @@ func (t *Batch) IsValid() error {
 		return fmt.Errorf("Batch name is required")
 	}
 
-	if t.RecipeId <= 0 {
+	if t.RecipeId == "" {
 		return fmt.Errorf("Batch must have a recipe")
 	}
 

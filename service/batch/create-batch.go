@@ -2,7 +2,6 @@ package batchService
 
 import (
 	"beer-production-api/entities/batch"
-	"fmt"
 )
 
 type CreateBatch struct {
@@ -18,10 +17,8 @@ func (cB *CreateBatch) Execute(input batch.CreateBatchInputDto) (*batch.CreateBa
 	BatchToCreate.Name = input.Name
 	BatchToCreate.RecipeId = input.RecipeId
 	BatchToCreate.StartDate = input.StartDate
-	fmt.Printf("BatchToCreate: %+v\n", BatchToCreate)
 	err := BatchToCreate.IsValid()
 	if err != nil {
-		fmt.Println("entrou no erro do isvalid")
 		return &batch.CreateBatchOutputDto{
 			ErrorMessage: "Cervejaria inválida ou com informações faltando",
 		}, err

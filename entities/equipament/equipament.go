@@ -5,7 +5,7 @@ import (
 )
 
 type Equipament struct {
-	ID int
+	ID string
 	Name string
 }
 
@@ -14,7 +14,7 @@ func NewEquipamentApplication() *Equipament {
 }
 
 func (t *Equipament) isValid() error {
-	if t.ID <= 0 {
+	if t.ID == "" {
 		return fmt.Errorf("Wrong ID format")
 	}
 
