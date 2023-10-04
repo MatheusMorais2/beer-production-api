@@ -17,6 +17,15 @@ func NewBreweryController(app *bootstrap.App) *BreweryController {
 	return &BreweryController{app: app}
 }
 
+// @Summary Create brewery
+// @Description Create brewery
+// @Tags brewery
+// @Accept  json
+// @Produce  json
+// @Param brewery body brewery.CreateBreweryInputDto true "brewery"
+// @Success 200 {object} brewery.CreateBreweryInputDto
+// @Failure 400 {object} common.HttpErrorResponse
+// @Router /brewery [post]
 func (bc *BreweryController) CreateBrewery(c echo.Context) (error) {
 	breweryDto := &brewery.CreateBreweryInputDto{}
 	err := c.Bind(breweryDto)

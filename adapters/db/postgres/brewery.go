@@ -15,9 +15,9 @@ func NewBreweryRepository(db *sql.DB) *BreweryRepository {
 
 func (t *BreweryRepository) Insert(breweryToInsert *brewery.Brewery) (*brewery.Brewery, error) {
 	err := t.db.QueryRow(
-		`INSERT INTO "brewery" (name, cnpj)
-		VALUES ($1, $2) RETURNING id`,
-		breweryToInsert.Name, breweryToInsert.Cnpj,
+		`INSERT INTO "brewery" (name, cnpj, creator_id)
+		VALUES ($1, $2, $3) RETURNING id`,
+		breweryToInsert.Name, breweryToInsert.Cnpj, breweryToInsert.CreatorId,
 	).Scan(&breweryToInsert.ID)
 
 	if err != nil {

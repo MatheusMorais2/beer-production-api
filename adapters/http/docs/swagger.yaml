@@ -1,0 +1,211 @@
+basePath: /
+definitions:
+  batch.CreateBatchInputDto:
+    properties:
+      name:
+        type: string
+      recipe_id:
+        type: string
+      start_date:
+        type: string
+    type: object
+  batch.CreateBatchStepInputDto:
+    properties:
+      batch_id:
+        type: string
+      recipe_step_id:
+        type: string
+      started_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  brewery.CreateBreweryInputDto:
+    properties:
+      cnpj:
+        type: string
+      creator_id:
+        type: string
+      name:
+        type: string
+    type: object
+  common.HttpErrorResponse:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
+  recipe.CreateRecipeInputDto:
+    properties:
+      brewery_id:
+        type: string
+      name:
+        type: string
+      steps:
+        items:
+          $ref: '#/definitions/recipe.Steps'
+        type: array
+    type: object
+  recipe.Steps:
+    properties:
+      instruction:
+        type: string
+      name:
+        type: string
+    type: object
+  user.CreateUserInputDto:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: Matheus Morais
+  description: Beer production API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Beer Production API
+  version: "1.0"
+paths:
+  /batch:
+    post:
+      consumes:
+      - application/json
+      description: Create batch
+      parameters:
+      - description: batch
+        in: body
+        name: batch
+        required: true
+        schema:
+          $ref: '#/definitions/batch.CreateBatchInputDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/batch.CreateBatchInputDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.HttpErrorResponse'
+      summary: Create batch
+      tags:
+      - batch
+  /brewery:
+    post:
+      consumes:
+      - application/json
+      description: Create brewery
+      parameters:
+      - description: brewery
+        in: body
+        name: brewery
+        required: true
+        schema:
+          $ref: '#/definitions/brewery.CreateBreweryInputDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/brewery.CreateBreweryInputDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.HttpErrorResponse'
+      summary: Create brewery
+      tags:
+      - brewery
+  /recipes:
+    post:
+      consumes:
+      - application/json
+      description: Create recipe
+      parameters:
+      - description: recipe
+        in: body
+        name: recipe
+        required: true
+        schema:
+          $ref: '#/definitions/recipe.CreateRecipeInputDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/recipe.CreateRecipeInputDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.HttpErrorResponse'
+      summary: Create recipe
+      tags:
+      - recipe
+  /start-batch:
+    post:
+      consumes:
+      - application/json
+      description: Create batch step
+      parameters:
+      - description: batch step
+        in: body
+        name: batch
+        required: true
+        schema:
+          $ref: '#/definitions/batch.CreateBatchStepInputDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/batch.CreateBatchStepInputDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.HttpErrorResponse'
+      summary: Create batch step
+      tags:
+      - batch
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: Create user
+      parameters:
+      - description: user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/user.CreateUserInputDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.CreateUserInputDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.HttpErrorResponse'
+      summary: Create user
+      tags:
+      - user
+schemes:
+- http
+swagger: "2.0"

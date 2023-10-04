@@ -2,6 +2,7 @@ package http
 
 import (
 	"beer-production-api/bootstrap"
+	_ "beer-production-api/common"
 	"beer-production-api/entities/batch"
 	batchService "beer-production-api/service/batch"
 	"net/http"
@@ -17,6 +18,15 @@ func NewBatchController(app *bootstrap.App) *BatchController {
 	return &BatchController{app: app}
 }
 
+// @Summary Create batch
+// @Description Create batch
+// @Tags batch
+// @Accept  json
+// @Produce  json
+// @Param batch body batch.CreateBatchInputDto true "batch"
+// @Success 200 {object} batch.CreateBatchInputDto
+// @Failure 400 {object} common.HttpErrorResponse
+// @Router /batch [post]
 func (bc *BatchController) CreateBatch(c echo.Context) (error) {
 
 	batchDto := &batch.CreateBatchInputDto{}
@@ -35,6 +45,15 @@ func (bc *BatchController) CreateBatch(c echo.Context) (error) {
 	return c.JSON(http.StatusCreated, output)
 }
 
+// @Summary Create batch step
+// @Description Create batch step
+// @Tags batch
+// @Accept  json
+// @Produce  json
+// @Param batch body batch.CreateBatchStepInputDto true "batch step"
+// @Success 200 {object} batch.CreateBatchStepInputDto
+// @Failure 400 {object} common.HttpErrorResponse
+// @Router /start-batch [post]
 func (bc *BatchController) CreateBatchStep(c echo.Context) (error) {
 	batchStepDto := &batch.CreateBatchStepInputDto{}
 	err := c.Bind(batchStepDto)

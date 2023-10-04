@@ -18,6 +18,15 @@ func NewUserController(app *bootstrap.App) *UserController {
 	return &UserController{app: app}
 }
 
+// @Summary Create user
+// @Description Create user
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param user body user.CreateUserInputDto true "user"
+// @Success 200 {object} user.CreateUserInputDto
+// @Failure 400 {object} common.HttpErrorResponse
+// @Router /user [post]
 func (uc *UserController) CreateUser(c echo.Context) (error) {
 	userDto := &user.CreateUserInputDto{}
 	err := c.Bind(userDto)
