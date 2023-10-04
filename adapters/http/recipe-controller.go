@@ -17,6 +17,15 @@ func NewRecipeController(app *bootstrap.App) *RecipeController {
 	return &RecipeController{app: app}
 }
 
+// @Summary Create recipe
+// @Description Create recipe
+// @Tags recipe
+// @Accept  json
+// @Produce  json
+// @Param recipe body recipe.CreateRecipeInputDto true "recipe"
+// @Success 200 {object} recipe.CreateRecipeInputDto
+// @Failure 400 {object} common.HttpErrorResponse
+// @Router /recipes [post]
 func (rc *RecipeController) CreateRecipe(c echo.Context) (error) {
 	RecipeDto := &recipe.CreateRecipeInputDto{}
 	err := c.Bind(RecipeDto)

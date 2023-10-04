@@ -6,6 +6,9 @@ import (
 	"log"
 
 	"github.com/labstack/echo/v4"
+	echoSwagger "github.com/swaggo/echo-swagger"
+
+	_ "beer-production-api/adapters/http/docs"
 )
 
 type Server struct {
@@ -21,12 +24,9 @@ func NewServer(app *bootstrap.App) *Server {
 // @title Beer Production API
 // @version 1.0
 // @description Beer production API
-
 // @contact.name Matheus Morais
-
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
 // @host localhost:8080
 // @BasePath /
 // @schemes http
@@ -36,6 +36,7 @@ func (s *Server) Start() {
 	recipeController := NewRecipeController(s.app)
 	batchController := NewBatchController(s.app)
 
+	s.echo.GET("/docs/*", echoSwagger.WrapHandler)
 	s.echo.POST("/users", userController.CreateUser)
 	s.echo.POST("/auth/login", userController.Login)
 
