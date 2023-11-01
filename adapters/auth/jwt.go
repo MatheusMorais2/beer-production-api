@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -81,9 +80,9 @@ func SignJWT(token *jwt.Token) (string, error) {
 
 func GetAuthTokenData(token string) (*jwt.Token, error) {
 	key := []byte(os.Getenv("JWT_SECRET_KEY"))
-	VerifySignature(token)
+	verifySignature(token)
 	myMap := make(map[string]interface{})
-	tokenData, err := jwt.Parse(
+	tokenData, _ := jwt.Parse(
 		token,
 		func(t *jwt.Token) (interface{}, error) {
 			claimsMap := t.Claims.(jwt.MapClaims)
@@ -96,13 +95,7 @@ func GetAuthTokenData(token string) (*jwt.Token, error) {
 			return key, nil
 		})
 		
-	fmt.Println(tokenData)
-	fmt.Println(myMap)
-	fmt.Println(err)
-	if err != nil {
-		return nil, err
-	}
-
+	fmt.Printf("tokenData: %+v", tokenData)
 
 	return tokenData, nil
 }
@@ -113,75 +106,55 @@ func GetAuthTokenFromHeader(s string) (string, error) {
 		err := fmt.Errorf("Authorization header malformed")
 		return "", err
 	}
+
+	if len(stringArray[1]) == 0 {
+		err := fmt.Errorf("Authorization header malformed")
+		return "", err
+	}
+	
 	return stringArray[1], nil
 }
 
 func areValidClaims(claims jwt.Claims) bool {
-/* 	fmt.Printf("claims.Valid(): %+v", claims)
-	if err := claims.Valid() != nil; err {
-		fmt.Println("Entrou no claims valid")
-		return false
-	} */
-	fmt.Println("entrou aqui ó")
 	claimsMap := claims.(jwt.MapClaims)
 
 	if claimsMap["authorized"] != true {
-		fmt.Println("Entrou no authorized false")
 		return false
 	}
+
 	exp, ok := claimsMap["exp"]
-
-
-	fmt.Printf("`ok: %+v\n`", ok)
-	fmt.Printf("`exp: %+v\n`", exp)
-	var expired bool
-	switch exp.(type) {
-	case float64:
-		fmt.Println("O tipo do exp é: float64")
-	case json.Number:
-		fmt.Println("O tipo do exp é: json")
-	case int64:
-		fmt.Println("O tipo do exp é: int64")
-	default:
-		fmt.Println("Could not get expiration time type")
+	if !ok {
 		return false
 	}
-
-	timeNow := time.Now().Unix()
-	fmt.Printf("timeNow := int64(time.Now() %+v\n", timeNow)
-	expired = claimsMap.VerifyExpiresAt(timeNow, true)
-	if expired {
-		fmt.Println("Entrou no expired")
+	if isExpired(exp) {
 		return false
 	}
-
-	//
 
 	matchIssuer := claimsMap.VerifyIssuer(os.Getenv("JWT_ISSUER"), true)
 	if !matchIssuer {
-		fmt.Println("Entrou no issuer")
 		return false
 	}
 
 	return true
 }
 
-/* func isExpired(exp interface{}) bool {
-	switch exp.(type) {
-	case float64:
-		timeNow := time.Now().Unix()
-		timeNow > exp
-	case json.Number:
-		fmt.Println("O tipo do exp é: json")
-	case int64:
-		fmt.Println("O tipo do exp é: int64")
-	default:
-		fmt.Println("Could not get expiration time type")
-		return false
+func isExpired(exp interface{}) bool {
+	expiration, err := time.Parse("2006-01-02T15:04:05.999999999-07:00", fmt.Sprintf("%+v", exp))
+	if err != nil {
+		return true
 	}
-} */
+	
+	timeNow := time.Now()
 
-func VerifySignature(tokenString string) bool {
+	isExpired := timeNow.After(expiration)
+	if isExpired {
+		return true
+	}
+
+	return false
+}
+
+func verifySignature(tokenString string) bool {
 	secretKey := []byte(os.Getenv("JWT_SECRET_KEY"))
 	parts := strings.Split(tokenString, ".")
     if len(parts) != 3 {
