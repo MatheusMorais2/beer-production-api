@@ -4,8 +4,10 @@ import (
 	"beer-production-api/adapters/auth"
 	"beer-production-api/bootstrap"
 	"log"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	_ "beer-production-api/adapters/http/docs"
@@ -36,6 +38,12 @@ func (s *Server) Start() {
 	recipeController := NewRecipeController(s.app)
 	batchController := NewBatchController(s.app)
 
+	s.echo.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
+	  }))
+
 	s.echo.GET("/docs/*", echoSwagger.WrapHandler)
 	s.echo.POST("/users", userController.CreateUser)
 	s.echo.POST("/auth/login", userController.Login)
@@ -53,3 +61,7 @@ func (s *Server) Start() {
 		log.Fatal(err)
 	}
 }
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	}

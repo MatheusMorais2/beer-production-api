@@ -45,6 +45,7 @@ func (uc *UserController) CreateUser(c echo.Context) (error) {
 }
 
 func (uc *UserController) Login(c echo.Context) (error) {
+	fmt.Println("alou")
 	loginInputDto := &user.LoginUserInputDto{}
 	err := c.Bind(loginInputDto)
 	if err != nil {

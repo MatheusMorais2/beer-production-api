@@ -1,4 +1,4 @@
-migrate_cmd = migrate --source file://adapters/db/migrations -database "postgresql://beer-production-api:password@localhost:5432/beer-production-api-database?sslmode=disable" -verbose
+migrate_cmd = migrate -source file://adapters/db/migrations -database "postgresql://beer-production-api:password@localhost:5432/beer-production-api-database?sslmode=disable" -verbose
 create_migration_cmd = migrate create -ext sql -dir adapters/db/migrations -seq
 
 migration_up:
