@@ -5,8 +5,15 @@ import "fmt"
 type Brewery struct {
 	ID string
 	Name string
-	Cnpj string
-	CreatorId string
+	Email string
+}
+
+type Invite struct {
+	Id string
+	InvitingUserId string
+	InvitedUserId string
+	BreweryId string
+	Role string
 }
 
 func NewBreweryApplication() *Brewery {
@@ -14,17 +21,12 @@ func NewBreweryApplication() *Brewery {
 }
 
 func (t *Brewery) IsValid() error {
-
 	if t.Name == "" {
 		return fmt.Errorf("Brewery name is required")
 	}
 
-	if t.Cnpj == "" {
+	if t.Email == "" {
 		return fmt.Errorf("Brewery cnpj is required")
-	}
-
-	if t.CreatorId == "" {
-		return fmt.Errorf("Creator id is required")
 	}
 
 	return nil

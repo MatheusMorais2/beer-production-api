@@ -1,4 +1,3 @@
-basePath: /
 definitions:
   batch.CreateBatchInputDto:
     properties:
@@ -22,12 +21,53 @@ definitions:
     type: object
   brewery.CreateBreweryInputDto:
     properties:
-      cnpj:
-        type: string
-      creator_id:
+      email:
         type: string
       name:
         type: string
+      user_id:
+        type: string
+    type: object
+  brewery.GetUserBreweriesOutputDTO:
+    properties:
+      email:
+        type: string
+      error_message:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      role:
+        type: string
+      statusCode:
+        type: integer
+    type: object
+  brewery.InviteUserInputDTO:
+    properties:
+      brewery_id:
+        type: string
+      invited_user_id:
+        type: string
+      inviting_user_id:
+        type: string
+      role:
+        type: string
+    type: object
+  brewery.InviteUserOutputDTO:
+    properties:
+      brewery_id:
+        type: string
+      error_message:
+        type: string
+      invited_user_id:
+        type: string
+      inviting_user_id:
+        type: string
+      role:
+        type: string
+      statusCode:
+        type: integer
     type: object
   common.HttpErrorResponse:
     properties:
@@ -65,17 +105,53 @@ definitions:
       password:
         type: string
     type: object
-host: localhost:8080
+  user.LoginUserInputDto:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  user.LoginUserOutputDto:
+    properties:
+      email:
+        type: string
+      error_message:
+        type: string
+      statusCode:
+        type: integer
+      token:
+        type: string
+    type: object
 info:
-  contact:
-    name: Matheus Morais
-  description: Beer production API
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  title: Beer Production API
-  version: "1.0"
+  contact: {}
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login user
+      parameters:
+      - description: user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/user.LoginUserInputDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.LoginUserOutputDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.HttpErrorResponse'
+      summary: Login user
+      tags:
+      - user
   /batch:
     post:
       consumes:
@@ -103,6 +179,30 @@ paths:
       tags:
       - batch
   /brewery:
+    get:
+      consumes:
+      - application/json
+      description: Get brewery by user id
+      parameters:
+      - description: User id
+        in: path
+        name: brewery
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/brewery.GetUserBreweriesOutputDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.HttpErrorResponse'
+      summary: Get brewery by user id
+      tags:
+      - brewery
     post:
       consumes:
       - application/json
@@ -126,6 +226,32 @@ paths:
           schema:
             $ref: '#/definitions/common.HttpErrorResponse'
       summary: Create brewery
+      tags:
+      - brewery
+  /brewery/invite:
+    post:
+      consumes:
+      - application/json
+      description: Invite user to a brewery
+      parameters:
+      - description: invite
+        in: body
+        name: invite
+        required: true
+        schema:
+          $ref: '#/definitions/brewery.InviteUserInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/brewery.InviteUserOutputDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.HttpErrorResponse'
+      summary: Invite user
       tags:
       - brewery
   /recipes:
@@ -180,7 +306,7 @@ paths:
       summary: Create batch step
       tags:
       - batch
-  /user:
+  /users:
     post:
       consumes:
       - application/json
@@ -206,6 +332,4 @@ paths:
       summary: Create user
       tags:
       - user
-schemes:
-- http
 swagger: "2.0"

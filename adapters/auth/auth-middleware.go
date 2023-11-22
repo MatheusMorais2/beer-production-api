@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -23,15 +22,17 @@ func AuthMiddleware (next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		tokenData, err := GetAuthTokenData(token)
-		fmt.Printf("tokenData que eles me dao : ", tokenData)
+		
 		if err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest,`Could not get token data: `+ err.Error())
 		}
 
-		valid := areValidClaims(tokenData.Claims)
-		if (!valid) {
+		userId, valid := areValidClaims(tokenData.Claims)
+		if (valid != nil) {
 			return echo.NewHTTPError(http.StatusUnauthorized, "Invalid claims")
 		}
+
+		c.Set("userId", userId)
 
 		next(c)
 		return nil

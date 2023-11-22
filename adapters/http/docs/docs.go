@@ -9,18 +9,52 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {
-            "name": "Matheus Morais"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
+        "contact": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/login": {
+            "post": {
+                "description": "Login user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Login user",
+                "parameters": [
+                    {
+                        "description": "user",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.LoginUserInputDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user.LoginUserOutputDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/common.HttpErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/batch": {
             "post": {
                 "description": "Create batch",
@@ -62,6 +96,42 @@ const docTemplate = `{
             }
         },
         "/brewery": {
+            "get": {
+                "description": "Get brewery by user id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "brewery"
+                ],
+                "summary": "Get brewery by user id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User id",
+                        "name": "brewery",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/brewery.GetUserBreweriesOutputDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/common.HttpErrorResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create brewery",
                 "consumes": [
@@ -90,6 +160,46 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/brewery.CreateBreweryInputDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/common.HttpErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/brewery/invite": {
+            "post": {
+                "description": "Invite user to a brewery",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "brewery"
+                ],
+                "summary": "Invite user",
+                "parameters": [
+                    {
+                        "description": "invite",
+                        "name": "invite",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/brewery.InviteUserInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/brewery.InviteUserOutputDTO"
                         }
                     },
                     "400": {
@@ -181,7 +291,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user": {
+        "/users": {
             "post": {
                 "description": "Create user",
                 "consumes": [
@@ -257,14 +367,77 @@ const docTemplate = `{
         "brewery.CreateBreweryInputDto": {
             "type": "object",
             "properties": {
-                "cnpj": {
-                    "type": "string"
-                },
-                "creator_id": {
+                "email": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "brewery.GetUserBreweriesOutputDTO": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "error_message": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "statusCode": {
+                    "type": "integer"
+                }
+            }
+        },
+        "brewery.InviteUserInputDTO": {
+            "type": "object",
+            "properties": {
+                "brewery_id": {
+                    "type": "string"
+                },
+                "invited_user_id": {
+                    "type": "string"
+                },
+                "inviting_user_id": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "brewery.InviteUserOutputDTO": {
+            "type": "object",
+            "properties": {
+                "brewery_id": {
+                    "type": "string"
+                },
+                "error_message": {
+                    "type": "string"
+                },
+                "invited_user_id": {
+                    "type": "string"
+                },
+                "inviting_user_id": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "statusCode": {
+                    "type": "integer"
                 }
             }
         },
@@ -323,18 +496,46 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "user.LoginUserInputDto": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.LoginUserOutputDto": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "error_message": {
+                    "type": "string"
+                },
+                "statusCode": {
+                    "type": "integer"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
         }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
-	Host:             "localhost:8080",
-	BasePath:         "/",
-	Schemes:          []string{"http"},
-	Title:            "Beer Production API",
-	Description:      "Beer production API",
+	Version:          "",
+	Host:             "",
+	BasePath:         "",
+	Schemes:          []string{},
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
