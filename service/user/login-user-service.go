@@ -29,7 +29,7 @@ func (lU *LoginUser) Execute(input user.LoginUserInputDto) (*user.LoginUserOutpu
 		return nil, fmt.Errorf("Unauthorized")
 	}
 
-	token, err := auth.GenerateUserToken(databaseUser.Email)
+	token, err := auth.GenerateUserToken(databaseUser.ID)
 	if err != nil {
 		return nil, fmt.Errorf("Error generating token")
 	}

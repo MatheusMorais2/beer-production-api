@@ -4,7 +4,6 @@ import (
 	"beer-production-api/bootstrap"
 	"beer-production-api/entities/user"
 	userService "beer-production-api/service/user"
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -37,7 +36,6 @@ func (uc *UserController) CreateUser(c echo.Context) (error) {
 	serviceInjection := userService.NewCreateUser(uc.app.UserRepo)
 	output, err := serviceInjection.Execute(*userDto)
 	if err != nil {
-		fmt.Println(err)
 		return c.JSON(
 			http.StatusBadRequest, err)
 	}
@@ -54,7 +52,6 @@ func (uc *UserController) CreateUser(c echo.Context) (error) {
 // @Failure 400 {object} common.HttpErrorResponse
 // @Router /auth/login [post]
 func (uc *UserController) Login(c echo.Context) (error) {
-	fmt.Println("alou")
 	loginInputDto := &user.LoginUserInputDto{}
 	err := c.Bind(loginInputDto)
 	if err != nil {

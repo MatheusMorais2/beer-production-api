@@ -1,7 +1,6 @@
 package http
 
 import (
-	"beer-production-api/adapters/auth"
 	"beer-production-api/bootstrap"
 	"log"
 	"net/http"
@@ -10,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
+	"beer-production-api/adapters/auth"
 	_ "beer-production-api/adapters/http/docs"
 )
 
@@ -39,7 +39,7 @@ func (s *Server) Start() {
 	batchController := NewBatchController(s.app)
 
 	s.echo.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:3000"},
+		AllowOrigins: []string{"*"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
 	  }))
@@ -49,12 +49,14 @@ func (s *Server) Start() {
 	s.echo.POST("/auth/login", userController.Login)
 
 	s.echo.POST("/brewery", breweryController.CreateBrewery, auth.AuthMiddleware)
+	s.echo.GET("/brewery", breweryController.GetBreweriesByUserId, auth.AuthMiddleware)
+	s.echo.POST("/brewery/invite", breweryController.InviteUser, auth.AuthMiddleware)
 
-	s.echo.POST("/recipes", recipeController.CreateRecipe, auth.AuthMiddleware)
+	s.echo.POST("/recipes", recipeController.CreateRecipe/* , auth.AuthMiddleware */)
 
-	s.echo.POST("/batches", batchController.CreateBatch, auth.AuthMiddleware)
+	s.echo.POST("/batches", batchController.CreateBatch/* , auth.AuthMiddleware */)
 
-	s.echo.POST("/start-batch", batchController.CreateBatchStep, auth.AuthMiddleware)
+	s.echo.POST("/start-batch", batchController.CreateBatchStep/* , auth.AuthMiddleware */)
 
 	err := s.echo.Start(":8080")
 	if err != nil {

@@ -26,13 +26,13 @@ type jwtClaims struct {
 	sub string
 }
 
-func GenerateUserToken(email string) (string, error) {
+func GenerateUserToken(id string) (string, error) {
 	rawToken, err := GenerateJWT()
 	if err != nil {
 		return "", fmt.Errorf("Error generating jwt token: %v", err)
 	}
 
-	claimedToken, err := ClaimJWT(rawToken, email)
+	claimedToken, err := ClaimJWT(rawToken, id)
 	if err != nil {
 		return "", fmt.Errorf("Error claiming jwt token: %v", err)
 	}
@@ -54,12 +54,12 @@ func GenerateJWT() (*jwt.Token, error) {
 	return token, nil
 }
 
-func ClaimJWT(token *jwt.Token,  email string) (*jwt.Token, error) {
+func ClaimJWT(token *jwt.Token, id string) (*jwt.Token, error) {
 	claims := token.Claims.(jwt.MapClaims)
 	expirationTime := time.Now().Add(10 * time.Minute)
 	claims["exp"] = expirationTime
 	claims["authorized"] = true
-	claims["sub"] = email
+	claims["sub"] = id
 	claims["iss"] = os.Getenv("JWT_ISSUER")
 
 
@@ -68,10 +68,9 @@ func ClaimJWT(token *jwt.Token,  email string) (*jwt.Token, error) {
 
 func SignJWT(token *jwt.Token) (string, error) {
 	secretKey := []byte(os.Getenv("JWT_SECRET_KEY"))
-	fmt.Println(string(secretKey))
+
 	tokenString, err := token.SignedString(secretKey)
 	if err != nil {
-		fmt.Println("e agr porra")
 		return "", fmt.Errorf("Error signing token: %+v", err)
 	}
 
@@ -80,28 +79,30 @@ func SignJWT(token *jwt.Token) (string, error) {
 
 func GetAuthTokenData(token string) (*jwt.Token, error) {
 	key := []byte(os.Getenv("JWT_SECRET_KEY"))
+
 	verifySignature(token)
+
 	myMap := make(map[string]interface{})
+
 	tokenData, _ := jwt.Parse(
 		token,
 		func(t *jwt.Token) (interface{}, error) {
 			claimsMap := t.Claims.(jwt.MapClaims)
+
 			myMap["exp"] = claimsMap["exp"]
 			myMap["sub"] = claimsMap["sub"]
 			myMap["iss"] = claimsMap["iss"]
 			myMap["authorized"] = claimsMap["authorized"]
-			fmt.Printf("myMap: %+v\n", myMap)
-			fmt.Printf("token dentro do keyFunc: %+v\n", t)
+
 			return key, nil
 		})
-		
-	fmt.Printf("tokenData: %+v", tokenData)
 
 	return tokenData, nil
 }
 
 func GetAuthTokenFromHeader(s string) (string, error) {
 	stringArray := strings.Split(s, "Bearer ")
+
 	if len(stringArray) != 2 {
 		err := fmt.Errorf("Authorization header malformed")
 		return "", err
@@ -115,27 +116,40 @@ func GetAuthTokenFromHeader(s string) (string, error) {
 	return stringArray[1], nil
 }
 
-func areValidClaims(claims jwt.Claims) bool {
+func areValidClaims(claims jwt.Claims) (userId interface{}, err error) {
 	claimsMap := claims.(jwt.MapClaims)
 
 	if claimsMap["authorized"] != true {
-		return false
+		return nil, fmt.Errorf("Unathorized")
 	}
 
 	exp, ok := claimsMap["exp"]
+
 	if !ok {
-		return false
+		return nil, fmt.Errorf("Unathorized")
 	}
+
 	if isExpired(exp) {
-		return false
+		return nil, fmt.Errorf("Expired token")
 	}
 
 	matchIssuer := claimsMap.VerifyIssuer(os.Getenv("JWT_ISSUER"), true)
+
 	if !matchIssuer {
-		return false
+		return nil, fmt.Errorf("Wrong token issuer")
 	}
 
-	return true
+	sub, ok := claimsMap["sub"]
+
+	if !ok {
+		return nil, fmt.Errorf("Unathorized")
+	}
+
+	if sub == "" {
+		return nil, fmt.Errorf("Missing user id") 
+	}
+
+	return sub, nil
 }
 
 func isExpired(exp interface{}) bool {
@@ -157,45 +171,35 @@ func isExpired(exp interface{}) bool {
 func verifySignature(tokenString string) bool {
 	secretKey := []byte(os.Getenv("JWT_SECRET_KEY"))
 	parts := strings.Split(tokenString, ".")
+
     if len(parts) != 3 {
-        fmt.Println("Token JWT inválido")
         return false
     }
-	fmt.Printf("\nparts: %+v\n", parts)
 
-    // Decodificar as partes base64
-    header, err := base64.RawURLEncoding.DecodeString(parts[0])
+    _, err := base64.RawURLEncoding.DecodeString(parts[0])
     if err != nil {
-        fmt.Println("Erro ao decodificar o cabeçalho:", err)
         return false
     }
-	fmt.Printf("\nheader: %+v\n", header)
 
-    payload, err := base64.RawURLEncoding.DecodeString(parts[1])
+
+    _, err = base64.RawURLEncoding.DecodeString(parts[1])
     if err != nil {
-        fmt.Println("Erro ao decodificar o payload:", err)
         return false
     }
-	fmt.Printf("\npayload: %+v\n", payload)
+
 
     signature, err := base64.RawURLEncoding.DecodeString(parts[2])
     if err != nil {
-        fmt.Println("Erro ao decodificar a assinatura:", err)
         return false
     }
-	fmt.Printf("\nsignature: %+v\n", signature)
 
-    // Verificar a assinatura
     hasher := hmac.New(sha256.New, []byte(secretKey))
     hasher.Write([]byte(parts[0] + "." + parts[1]))
     expectedSignature := hasher.Sum(nil)
-	fmt.Printf("\nexpectedSignature: %+v\n", expectedSignature)
 
     if hmac.Equal(signature, expectedSignature) {
-        fmt.Println("A verificação da assinatura foi bem-sucedida")
 		return true
     } else {
-        fmt.Println("A verificação da assinatura falhou")
 		return false
     }
 

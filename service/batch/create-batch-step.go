@@ -18,13 +18,6 @@ func (cbS *CreateBatchStep) Execute(input batch.CreateBatchStepInputDto) (*batch
 	BatchStepToCreate.RecipeStepId = input.RecipeStepId
 	BatchStepToCreate.StartedAt = input.StartedAt
 	BatchStepToCreate.BatchId = input.BatchId
-/* 	err := BatchStepToCreate.IsValid()
-	if err != nil {
-		fmt.Println("entrou no erro do isvalid")
-		return &batch.CreateBatchOutputDto{
-			ErrorMessage: "Cervejaria inválida ou com informações faltando",
-		}, err
-	} */
 
 	createdBatchStep, err := cbS.batchRepository.InsertBatchStep(BatchStepToCreate)
 	if err != nil {
