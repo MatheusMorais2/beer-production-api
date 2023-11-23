@@ -26,7 +26,7 @@ func NewUserController(app *bootstrap.App) *UserController {
 // @Param user body user.CreateUserInputDto true "user"
 // @Success 200 {object} user.CreateUserInputDto
 // @Failure 400 {object} common.HttpErrorResponse
-// @Router /user [post]
+// @Router /users [post]
 func (uc *UserController) CreateUser(c echo.Context) (error) {
 	userDto := &user.CreateUserInputDto{}
 	err := c.Bind(userDto)
@@ -44,6 +44,15 @@ func (uc *UserController) CreateUser(c echo.Context) (error) {
 	return c.JSON(http.StatusCreated, output)
 }
 
+// @Summary Login user
+// @Description Login user
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param user body user.LoginUserInputDto true "user"
+// @Success 200 {object} user.LoginUserOutputDto
+// @Failure 400 {object} common.HttpErrorResponse
+// @Router /auth/login [post]
 func (uc *UserController) Login(c echo.Context) (error) {
 	fmt.Println("alou")
 	loginInputDto := &user.LoginUserInputDto{}
