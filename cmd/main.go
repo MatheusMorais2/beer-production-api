@@ -21,6 +21,7 @@ func connectToDB() (*sql.DB, error) {
 		Password: os.Getenv("DB_PASSWORD"),
 		DBName: os.Getenv("DB_NAME"),
 		Port: os.Getenv("DB_PORT"),
+		Sslmode: os.Getenv("DB_SSL"),
 	}
 
 	return postgres.New(dbConfig)
