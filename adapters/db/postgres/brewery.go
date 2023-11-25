@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"beer-production-api/entities/brewery"
-	"beer-production-api/entities/recipe"
 	"database/sql"
 )
 
@@ -43,7 +42,7 @@ func (t *BreweryRepository) Insert(breweryToInsert *brewery.CreateBreweryDBInput
 }
 
 func (t *BreweryRepository) GetByID(id string) (*brewery.Brewery, error) {
-    brewery := &brewery.Brewery{} // Create a brewery object to store the retrieved data
+    brewery := &brewery.Brewery{}
 
     err := t.db.QueryRow(
         `SELECT id, name, email FROM "brewery" WHERE id = $1`,
@@ -86,7 +85,7 @@ func (t *BreweryRepository) GetBreweriesByUserId(userID string) ([]*brewery.GetU
     return breweries, nil
 }
 
-func (t *BreweryRepository) InviteUserToBrewery(invite brewery.InviteUserInputDTO) (*brewery.Invite, error) {
+func (t *BreweryRepository) InviteUserToBrewery(invite brewery.InviteUserRepoInputDto) (*brewery.Invite, error) {
     createdInvite := &brewery.Invite{}
 
     err := t.db.QueryRow(`
@@ -117,30 +116,20 @@ func (t *BreweryRepository) GetUserRole(userId string, breweryId string) (string
     return role, nil
 }
 
-//TODO: essa funcao deve ser em recipes como Get Recipes by Brewery ID
-func (t *BreweryRepository) GetBreweryRecipes(breweryID string) ([]*recipe.Recipe, error) {
-    recipes := []*recipe.Recipe{}
+func (t *BreweryRepository) GetByName(breweryName string) (*brewery.Brewery, error) {
+    var brewery = &brewery.Brewery{}
 
-    rows, err := t.db.Query(
-        `SELECT id, name FROM "recipe" WHERE brewery_id = $1`,
-        breweryID,
-    )
+    err := t.db.QueryRow(`
+        SELECT * FROM brewery WHERE name = $1;
+    `, breweryName).Scan(brewery)
+     
     if err != nil {
         return nil, err
     }
-    defer rows.Close()
 
-    for rows.Next() {
-        recipeForBrewery := &recipe.Recipe{}
-        err := rows.Scan(&recipeForBrewery.ID, &recipeForBrewery.Name)
-        if err != nil {
-            return nil, err
-        }
-        recipes = append(recipes, recipeForBrewery)
-    }
-
-    return recipes, nil
+    return brewery, nil
 }
+
 
 //TODO: essa funcao deve ficar em batches como Get batches by brewery id
 /* func (t *BreweryRepository) GetBreweryBatches(breweryID uuid.UUID) ([]*batch.BatchWithRecipe, error) {

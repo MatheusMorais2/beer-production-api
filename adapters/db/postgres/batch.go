@@ -42,3 +42,4 @@ func (t *BatchRepository) InsertBatchStep(batchStepToInsert *batch.BatchStep) (*
 
 	return batchStepToInsert, nil
 }
+

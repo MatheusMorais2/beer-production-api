@@ -36,3 +36,13 @@ type CreateBatchStepOutputDto struct {
 	StatusCode int `json:"statusCode,omitempty"`
 }
 
+type GetBatchesByBreweryIdOutputDto struct {
+	Id string `json:"id"`
+	Name string `json:"name"`
+	RecipeId string `json:"recipe_id"`
+	StartDate time.Time `json:"start_date"`
+	FinishDate time.Time `json:"finish_date,omitempty"`
+	Steps []BatchStep `json:"steps"`
+	ErrorMessage string `json:"error_message,omitempty"`
+	StatusCode int `json:"statusCode,omitempty"`
+}

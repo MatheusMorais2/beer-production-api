@@ -56,7 +56,7 @@ func GenerateJWT() (*jwt.Token, error) {
 
 func ClaimJWT(token *jwt.Token, id string) (*jwt.Token, error) {
 	claims := token.Claims.(jwt.MapClaims)
-	expirationTime := time.Now().Add(10 * time.Minute)
+	expirationTime := time.Now().Add(10000 * time.Minute)
 	claims["exp"] = expirationTime
 	claims["authorized"] = true
 	claims["sub"] = id
