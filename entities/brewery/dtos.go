@@ -25,9 +25,16 @@ type GetUserBreweriesOutputDTO struct {
 
 type InviteUserInputDTO struct {
 	InvitingUserId string `json:"inviting_user_id"`
-	InvitedUserId string `json:"invited_user_id"`
-	BreweryId string `json:"brewery_id"`
+	InvitedUserEmail string `json:"invited_user_email"`
+	BreweryName string `json:"brewery_name"`
 	Role string `json:"role"`
+}
+
+type InviteUserRepoInputDto struct {
+	InvitingUserId string
+	InvitedUserId string
+	BreweryId string
+	Role string
 }
 
 type InviteUserOutputDTO struct {

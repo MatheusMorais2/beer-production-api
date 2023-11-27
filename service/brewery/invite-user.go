@@ -18,12 +18,22 @@ func NewInviteUserToBrewery(breweryRepositry brewery.BreweryRepository, userRepo
 }
 
 func (iU *InviteUserToBrewery) Execute(invite brewery.InviteUserInputDTO) (*brewery.Invite, error) {
-	invitingUserRole, err := iU.BreweryRepository.GetUserRole(invite.InvitingUserId, invite.BreweryId)
+	dbBrewery, err := iU.BreweryRepository.GetByName(invite.BreweryName)
+	if err != nil {
+		return nil, fmt.Errorf("Can't find brewery")
+	}
+
+	invitingUserRole, err := iU.BreweryRepository.GetUserRole(invite.InvitingUserId, dbBrewery.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	if (invite.InvitingUserId == invite.InvitedUserId) {
+	invitedUser, err := iU.UserRepository.GetByEmail(invite.InvitedUserEmail)
+	if err != nil {
+		return nil, fmt.Errorf("Can't find invited user")
+	}
+
+	if (invite.InvitingUserId == invitedUser.ID) {
 		return nil, fmt.Errorf("You can't invite yourself")
 	}
 
@@ -34,8 +44,15 @@ func (iU *InviteUserToBrewery) Execute(invite brewery.InviteUserInputDTO) (*brew
 	if (invite.Role == "creator") {
 		return nil, fmt.Errorf("Can't invite to be creator")
 	}
+
+	repoInvite := brewery.InviteUserRepoInputDto{
+		InvitingUserId: invite.InvitingUserId,
+		InvitedUserId: invitedUser.ID,
+		Role: invite.Role,
+		BreweryId: dbBrewery.ID,
+	}
 	
-	createdInvite, err := iU.BreweryRepository.InviteUserToBrewery(invite)
+	createdInvite, err := iU.BreweryRepository.InviteUserToBrewery(repoInvite)
 	if err != nil {
 		return nil, err
 	}

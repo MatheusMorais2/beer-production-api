@@ -10,5 +10,6 @@ type BreweryRepository interface {
 	Insert(brewery *CreateBreweryDBInputDTO) (*Brewery, error)
 	GetBreweriesByUserId(userId string) ([]*GetUserBreweriesOutputDTO, error)
     GetUserRole(userId string, breweryId string) (string, error)
-    InviteUserToBrewery(invite InviteUserInputDTO) (*Invite, error)
+    InviteUserToBrewery(invite InviteUserRepoInputDto) (*Invite, error)
+    GetByName(breweryName string) (*Brewery, error)
 }

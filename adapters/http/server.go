@@ -52,7 +52,9 @@ func (s *Server) Start() {
 	s.echo.GET("/brewery", breweryController.GetBreweriesByUserId, auth.AuthMiddleware)
 	s.echo.POST("/brewery/invite", breweryController.InviteUser, auth.AuthMiddleware)
 
-	s.echo.POST("/recipes", recipeController.CreateRecipe/* , auth.AuthMiddleware */)
+	s.echo.POST("/recipes", recipeController.CreateRecipe, auth.AuthMiddleware)
+	s.echo.GET("/recipes/brewery/:brewery-id", recipeController.GetRecipesByBreweryId, auth.AuthMiddleware)
+	s.echo.GET("/recipes/:brewery-id/steps/:recipe-id", recipeController.GetRecipeSteps, auth.AuthMiddleware)
 
 	s.echo.POST("/batches", batchController.CreateBatch/* , auth.AuthMiddleware */)
 
