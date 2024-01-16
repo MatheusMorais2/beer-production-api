@@ -39,6 +39,6 @@ func main() {
 
 	app := bootstrap.NewApp(db)
 
-	httpServer := server.NewServer(app)
+	httpServer := server.NewServer(app, db)
 	httpServer.Start()
 }

@@ -2,6 +2,7 @@ package http
 
 import (
 	"beer-production-api/bootstrap"
+	"database/sql"
 	"log"
 	"net/http"
 
@@ -16,11 +17,12 @@ import (
 type Server struct {
 	app *bootstrap.App
 	echo *echo.Echo
+	db *sql.DB
 }
 
-func NewServer(app *bootstrap.App) *Server {
+func NewServer(app *bootstrap.App, db *sql.DB) *Server {
 	e := echo.New()
-	return &Server{app: app, echo: e}
+	return &Server{app: app, echo: e, db: db}
 }
 
 // @title Beer Production API
@@ -44,6 +46,8 @@ func (s *Server) Start() {
 		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
 	  }))
 
+	s.echo.GET("/healthz", s.checkHealth)
+
 	s.echo.GET("/docs/*", echoSwagger.WrapHandler)
 	s.echo.POST("/users", userController.CreateUser)
 	s.echo.POST("/auth/login", userController.Login)
@@ -64,6 +68,19 @@ func (s *Server) Start() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+type DatabaseError struct {
+	Message string `json:"message"`
+}
+
+func(s *Server) checkHealth(c echo.Context) error {
+	err := s.db.Ping()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, DatabaseError{Message: "Database is not healthy: " + err.Error()})
+	}
+	
+	return c.NoContent(200)
 }
 
 func enableCors(w *http.ResponseWriter) {
